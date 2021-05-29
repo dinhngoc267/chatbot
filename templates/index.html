@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'index.css')}}" type='text/css'>
+    <script src="{{url_for('static', filename = 'index.js')}}"></script> 
+    <div class="container">
+        <h1 class="title">chat-bot</h1>
+        <div class="chat"></div>
+        <div class="busy"></div>
+        <div class="input">
+          <input type="text" placeholder="Chat with me!" />
+          <a>Send</a>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</html>
