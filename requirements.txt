@@ -21,14 +21,14 @@ importlib-metadata
 ipykernel==5.5.4
 ipython==7.23.1
 ipython-genutils==0.2.0
-itsdangerous @ file:///tmp/build/80754af9/itsdangerous_1621432558163/work
+itsdangerous 
 jedi==0.18.0
-Jinja2 @ file:///tmp/build/80754af9/jinja2_1621238361758/work
+Jinja2 
 joblib==1.0.1
 jupyter-client==6.1.12
 jupyter-core==4.7.1
 Markdown==3.3.4
-MarkupSafe @ file:///C:/ci/markupsafe_1621528502553/work
+MarkupSafe 
 matplotlib-inline==0.1.2
 munkres==1.1.4
 murmurhash==1.0.5
@@ -78,6 +78,6 @@ typing-extensions==3.10.0.0
 urllib3==1.26.5
 wasabi==0.8.2
 wcwidth==0.2.5
-Werkzeug @ file:///home/ktietz/src/ci/werkzeug_1611932622770/work
+Werkzeug 
 wincertstore==0.2
-zipp @ file:///tmp/build/80754af9/zipp_1615904174917/work
+zipp 
