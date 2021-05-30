@@ -12,12 +12,12 @@ decorator==5.0.7
 en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.0.0/en_core_web_trf-3.0.0.tar.gz
 fastrlock==0.6
 filelock==3.0.12
-Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
+Flask 
 gensim==4.0.1
 grpcio==1.38.0
 gunicorn==20.1.0
 idna==2.10
-importlib-metadata @ file:///C:/ci/importlib-metadata_1617877477759/work
+importlib-metadata 
 ipykernel==5.5.4
 ipython==7.23.1
 ipython-genutils==0.2.0
