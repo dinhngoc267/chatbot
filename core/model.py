@@ -1,11 +1,8 @@
 import string
 import spacy
-import spacy_transformers
-import pandas as pd
 import numpy as np
 from scipy import spatial
 from sent2vec.vectorizer import Vectorizer
-import gensim
 
 nlp = spacy.load("en_core_web_trf")
 nlp.vocab["not"].is_stop = False
@@ -55,9 +52,8 @@ def check_relevant(question, answer):
   answer_tokens = text_processing(answer)
 
   vectors = sent_to_vecs([question_tokens,answer_tokens])
-  print(vectors)
   dist = spatial.distance.cosine(vectors[0], vectors[1])
-  print(dist)
+
   if dist < 0.65:
     return 1
   return 0
