@@ -4,7 +4,7 @@ function chatBot() {
   
 	// current user input
 	this.input;
-	
+	this.question_index = -1;
 	/**
 	 * respondTo
 	 * 
@@ -15,32 +15,46 @@ function chatBot() {
 	 * @param input - input chat string
 	 * @return reply of chat-bot
 	 */
+	this.setInput = function(input) {
+		this.input = input.toLowerCase();
+	}
+
 	this.respondTo = function(input) {
 	
 		this.input = input.toLowerCase();
 		
-		if(this.match('(hi|sup|hello|hey|hola|howdy)(\\s|!|\\.|$)'))
-			return encodeURI("<b>u</b>m... hi?");
+		// if((this.match('(hi|sup|hello|hey|hola|howdy)(\\s|!|\\.|$)') || this.match('(yes|of course|sure)(\\s|!|\\.|$)')) && this.question_index==0) {
+		// 	$.ajax({
+		// 		cache:false,
+		// 		type: 'GET',
+		// 		url: "/get-first-question",
+		// 		contentType: "application/json",
+		// 		success:  function(data) {         
+		// 			return data.response   
+		// 		//do what you what with return data
+		// 		}
+		// 	});
+		// }
+			//return encodeURI("<b>u</b>m... hi?");
     
 		if(this.match('what[^ ]* up') || this.match('sup') || this.match('how are you'))
 			return "this codepen thing is pretty cool, huh?";
 		
-		if(this.match('l(ol)+') || this.match('(ha)+(h|$)') || this.match('lmao'))
+		else if(this.match('l(ol)+') || this.match('(ha)+(h|$)') || this.match('lmao'))
 			return "what's so funny?";
 		
-		if(this.match('^no+(\\s|!|\\.|$)'))
+		else if(this.match('^no+(\\s|!|\\.|$)'))
 			return "don't be such a negative nancy :(";
 		
-		if(this.match('(cya|bye|see ya|ttyl|talk to you later)'))
+		else if(this.match('(cya|bye|see ya|ttyl|talk to you later)'))
 			return ["alright, see you around", "good teamwork!"];
 		
-		if(this.match('(dumb|stupid|is that all)'))
+		else if(this.match('(dumb|stupid|is that all)'))
 			return ["hey i'm just a proof of concept", "you can make me smarter if you'd like"];
 		
-		if(this.input == 'noop')
-			return;
+		//else if(this.input == 'noop')
+		return null;
 		
-		return input + " what?";
 	}
 	
 	/**
@@ -57,7 +71,7 @@ function chatBot() {
 
 /* ---------- START INDEX JS ----------- */
 
-$(function() {
+$(async function() {
 
 	// chat aliases
 	var you = 'You';
@@ -65,7 +79,7 @@ $(function() {
 	
 	// slow reply by 400 to 800 ms
 	var delayStart = 400;
-	var delayEnd = 800;
+	var delayEnd = 2000;
 	
 	// initialize
 	var bot = new chatBot();
@@ -75,29 +89,102 @@ $(function() {
 	
 	// submit user input and get chat-bot's reply
 	var submitChat = function() {
-	
 		var input = $('.input input').val();
+		
 		if(input == '') return;
 		
 		$('.input input').val('');
 		updateChat(you, input);
-		
+		bot.setInput(input)
 		var reply = bot.respondTo(input);
-		if(reply == null) return;
-		
-		var latency = Math.floor((Math.random() * (delayEnd - delayStart)) + delayStart);
-		$('.busy').css('display', 'block');
-		waiting++;
-		setTimeout( function() {
-			if(typeof reply === 'string') {
-				updateChat(robot, reply);
-			} else {
-				for(var r in reply) {
-					updateChat(robot, reply[r]);
+		if(reply != null)
+		{
+			var latency = Math.floor((Math.random() * (delayEnd - delayStart)) + delayStart);
+			$('.busy').css('display', 'block');
+			waiting++;
+			setTimeout( async function() {
+				console.log('reply:',reply)
+				if(typeof reply === 'string') {
+					updateChat(robot, reply);
+				} else {
+					for(var r in reply) {
+						updateChat(robot, reply[r]);
+					}
 				}
-			}
-			if(--waiting == 0) $('.busy').css('display', 'none');
-		}, latency);
+				if(--waiting == 0) $('.busy').css('display', 'none');
+					//do what you what with return data
+			}, latency);
+			return;
+		}
+
+		if((bot.match('(hi|sup|hello|hey|hola|howdy)(\\s|!|\\.|$)') || bot.match('(yes|of course|sure|okay)(\\s|!|\\.|$)')) && bot.question_index==-1) {
+			bot.question_index += 1;
+			var latency = Math.floor((Math.random() * (delayEnd - delayStart)) + delayStart);
+			$('.busy').css('display', 'block');
+			waiting++;
+			setTimeout( async function() {
+				//var reply = await bot.respondTo(input);
+				$.ajax({
+					cache:false,
+					type: 'GET',
+					url: "/get-first-question",
+					contentType: "application/json",
+					success:  function(data) {         
+						res = data.result
+						console.log(res)
+						if(res==true)
+						{
+							bot.question_index += 1;
+						}   
+						reply =  data.response
+						console.log('reply:',reply)
+						if(reply == null) return;
+						if(typeof reply === 'string') {
+							updateChat(robot, reply);
+						} else {
+							for(var r in reply) {
+								updateChat(robot, reply[r]);
+							}
+						}
+						if(--waiting == 0) $('.busy').css('display', 'none');
+							//do what you what with return data
+						}
+				});
+			}, latency);
+			return;
+		}
+		console.log(bot.question_index)
+		$.ajax({
+			cache:false,
+			type: 'POST',
+			url: "/",
+			contentType: "application/json",
+			dataType:'json',
+			data:JSON.stringify({'answer':input, 'question_index':bot.question_index}),
+			success:  function(data) {
+				res = data.result
+				console.log(res)
+				if(res==true)
+				{
+					bot.question_index += 1;
+				}   
+
+				reply =  data.response
+				console.log('reply:',reply)
+				if(reply == null) return;
+				if(typeof reply === 'string') {
+					updateChat(robot, reply);
+				} else {
+					for(var r in reply) {
+						updateChat(robot, reply[r]);
+					}
+				}
+				if(--waiting == 0) $('.busy').css('display', 'none');
+					//do what you what with return data
+				}
+			//do what you what with return data
+		});
+		
 	}
 	
 	// add a new line to the chat
@@ -127,6 +214,6 @@ $(function() {
 	$('.input a').bind('click', submitChat);
 	
 	// initial chat state
-	updateChat(robot, 'Hi there. Try typing something!');
+	updateChat(robot, 'Hi there. We want to ask you some questions!');
 
 });

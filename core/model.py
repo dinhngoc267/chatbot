@@ -10,8 +10,22 @@ import gensim
 nlp = spacy.load("en_core_web_trf")
 nlp.vocab["not"].is_stop = False
 vectorizer = Vectorizer()
-pretrained_vectors_path = './model/lexvec.vectors'
-model = gensim.models.KeyedVectors.load_word2vec_format(pretrained_vectors_path)
+#pretrained_vectors_path = './core/lexvec.vectors'
+#model = gensim.models.KeyedVectors.load_word2vec_format(pretrained_vectors_path)
+
+def loadGloveModel(File):
+    print("Loading Glove Model")
+    f = open(File,encoding="utf8")
+    gloveModel = {}
+    for line in f:
+        splitLines = line.split()
+        word = splitLines[0]
+        wordEmbedding = np.array([float(value) for value in splitLines[1:]])
+        gloveModel[word] = wordEmbedding
+    print(len(gloveModel)," words loaded!")
+    return gloveModel
+    
+model = loadGloveModel('./core/lexvec.vectors')
 
 # Define a function to normalize text:
 def text_processing(text):
@@ -41,8 +55,10 @@ def check_relevant(question, answer):
   answer_tokens = text_processing(answer)
 
   vectors = sent_to_vecs([question_tokens,answer_tokens])
-
-  if spatial.distance.cosine(vectors[0], vectors[1]) < 0.65:
+  print(vectors)
+  dist = spatial.distance.cosine(vectors[0], vectors[1])
+  print(dist)
+  if dist < 0.65:
     return 1
   return 0
 
