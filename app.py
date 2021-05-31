@@ -21,9 +21,8 @@ def get_first_question():
 def get_response():
     data = json.loads(request.data)
     answer = data.get('answer')
-    print(answer)
     question_index = data.get('question_index') #request.args.get('question_index', 0, int)
-
+    
     is_relevant = model.check_relevant(questions[question_index], answer)
 
     if is_relevant == 0:

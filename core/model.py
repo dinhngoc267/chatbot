@@ -1,9 +1,18 @@
 import string
+import boto3
 import spacy
 import numpy as np
 from scipy import spatial
 from sent2vec.vectorizer import Vectorizer
+from boto3 import client
 
+s3 = boto3.client(
+  's3',
+    'us-west-1',
+    aws_access_key_id = 'AKIAQBARFETZSF4P4BWX',
+    aws_secret_access_key = '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'
+)
+s3.download_file('pre-trained-word2vec', 'lexvec.vectors', 'lexvec.vectors')
 nlp = spacy.load("en_core_web_trf")
 nlp.vocab["not"].is_stop = False
 vectorizer = Vectorizer()
@@ -22,7 +31,7 @@ def loadGloveModel(File):
     print(len(gloveModel)," words loaded!")
     return gloveModel
     
-model = loadGloveModel('./core/lexvec.vectors')
+model = loadGloveModel('lexvec.vectors')
 
 # Define a function to normalize text:
 def text_processing(text):
