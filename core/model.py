@@ -9,8 +9,8 @@ from boto3 import client
 s3 = boto3.client(
   's3',
     'us-west-1',
-    aws_access_key_id = 'AKIAQBARFETZSF4P4BWX',
-    aws_secret_access_key = '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'
+    aws_access_key_id = '..'
+    aws_secret_access_key = ''
 )
 s3.download_file('pre-trained-word2vec', 'lexvec.vectors', 'lexvec.vectors')
 nlp = spacy.load("en_core_web_trf")
